@@ -13,6 +13,8 @@
     <script type="text/javascript" th:src="@{js/deleteUser.js}"  src="../static/js/deleteUser.js"></script>
     <script type="text/javascript" th:src="@{js/getOperations.js}"  src="../static/js/getOperations.js"></script>
     <script type="text/javascript" th:src="@{js/editUser.js}"  src="../static/js/editUser.js"></script>
+    <script type="text/javascript" th:src="@{js/acceptRequest.js}"  src="../static/js/acceptRequest.js"></script>
+    <script type="text/javascript" th:src="@{js/cancelRequest.js}"  src="../static/js/cancelRequest.js"></script>
     <title>Users</title>
     <meta name="theme-color" content="#7952b3">
 </head>
@@ -21,7 +23,6 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
         <div class="nav justify-content-left">
         <span class="navbar-text" id="info">
-            hgggh
         </span>
         </div>
         <ul class="nav justify-content-end">
@@ -56,6 +57,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#newUser" data-toggle="tab">New user</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#adminRequestsTable" data-toggle="tab">Сheck who wants to be admin</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="tab-content border">
@@ -72,6 +76,7 @@
                                     <th>FirstName</th>
                                     <th>LastName</th>
                                     <th>Age</th>
+                                    <th>Email</th>
                                     <th>Role</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
@@ -95,6 +100,7 @@
                                     <th>FirstName</th>
                                     <th>LastName</th>
                                     <th>Age</th>
+                                    <th>Email</th>
                                     <th>Role</th>
                                 </tr>
                                 </thead>
@@ -103,7 +109,27 @@
                             </table>
                         </div>
                     </div>
-
+                    <div sec:authorize="hasAnyRole('ROLE_ADMIN')" class="tab-pane fade" id="adminRequestsTable">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <div class="navbar-brand">Admin requests</div>
+                        </nav>
+                        <div>
+                            <table class="table table-striped" id="tableRequestsAllUsers">
+                                <thead>
+                                <tr>
+                                    <th>RequestId</th>
+                                    <th>Login</th>
+                                    <th>FirstName</th>
+                                    <th>LastName</th>
+                                    <th>Accept</th>
+                                    <th>Cancel</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="tab-pane fade text-center" id="newUser">
                         <nav class="navbar navbar-expand-lg navbar-light bg-light">
                             <div class="navbar-brand">Add new user</div>
@@ -134,6 +160,11 @@
                             <div class="form-group">
                                 <label for="ageCreate" class="com-form-label">Age</label>
                                 <input type="number" class="form-control" id="ageCreate">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="emailCreate" class="com-form-label">Email</label>
+                                <input type="email" class="form-control" id="emailCreate">
                             </div>
 
                             <div class="form-group">

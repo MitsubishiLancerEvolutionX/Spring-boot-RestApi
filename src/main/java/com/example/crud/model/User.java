@@ -1,5 +1,7 @@
 package com.example.crud.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
@@ -7,6 +9,10 @@ import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Set;
 
+@JsonIdentityInfo(
+        property = "userId",
+        generator = ObjectIdGenerators.PropertyGenerator.class
+)
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -35,6 +41,9 @@ public class User implements UserDetails {
     @Max(value = 127)
     private byte age;
 
+    @Pattern(regexp = "([A-z0-9_.-]+)@([A-z0-9_.-]+).([A-z]{2,8})", message = "Enter correct email")
+    private String email;
+
     @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
@@ -42,13 +51,37 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Set<Role> roles;
 
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private RequestAdmins requestAdmins;
+
+    public RequestAdmins getRequestAdmins() {
+        return requestAdmins;
+    }
+
+    public void setRequestAdmins(RequestAdmins requestAdmins) {
+        this.requestAdmins = requestAdmins;
+    }
+
     public User() {
     }
 
-    public User(String firstName, String lastName, byte age, String login, String password, Set<Role> roles) {
+    public User(String firstName, String lastName, byte age, String email, String login, String password, Set<Role> roles, RequestAdmins requestAdmins) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
+        this.email = email;
+        this.login = login;
+        this.password = password;
+        this.roles = roles;
+        this.requestAdmins = requestAdmins;
+    }
+
+    public User(String firstName, String lastName, byte age, String email, String login, String password, Set<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
         this.login = login;
         this.password = password;
         this.roles = roles;
@@ -96,6 +129,14 @@ public class User implements UserDetails {
 
     public void setAge(byte age) {
         this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<Role> getRoles() {

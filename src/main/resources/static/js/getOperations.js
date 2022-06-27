@@ -11,10 +11,22 @@ async function getUser() {
                     <td>${user.firstName}</td>
                     <td>${user.lastName}</td>
                     <td>${user.age}</td>
+                    <td>${user.email}</td>
                     <td>${user.roles.map(e => " " + e.role.substr(5))}</td>
+                   
+                  
+                            <button type="button" class="button-cancel btn btn-danger"
+                                    id="wantAdmin">I want to be an admin</button>
+                       
                 </tr>
             `;
             table.innerHTML = temp;
+
+            $("#wantAdmin").on('click', (event) => {
+                let targetButton = $(event.target);
+                let buttonRequestId = $("#userId").text();
+                userFetch.createAdminRequest(Number(buttonRequestId));
+            })
 
             $(function (){
                 let role = ""
@@ -50,7 +62,46 @@ async function tittle() {
         h1a1.innerHTML = temp;
     }
 }
+async function getAdminRequests() {
+    let temp = '';
+    const table = document.querySelector('#tableRequestsAllUsers tbody');
+    await userFetch.findAllAdminRequests()
+        .then(res => res.json())
+        .then(requests => {
+            requests.forEach(request => {
+                temp += `
+                <tr>
+                    <td>${request.id}</td>
+                    <td>${request.user.login}</td>
+                    <td>${request.user.firstName}</td>
+                    <td>${request.user.lastName}</td>
+                    <td>
+                        <button type="button" data-requestid="${request.id}" data-action="accept" class="button-accept btn btn-info"
+                            className data-toggle="modal" data-target="#acceptModal">Accept</button>
+                    </td>
+                    <td>
+                        <button type="button" data-requestid="${request.id}" data-action="cancel" class="button-cancel btn btn-danger"
+                            className data-toggle="modal" data-target="#cancelModal">Cancel</button>
+                    </td>
+                </tr>
+               `;
+            })
+            table.innerHTML = temp;
 
+        })
+
+    $("#tableRequestsAllUsers").find('.button-accept').on('click', (event) => {
+        let targetButton = $(event.target);
+        let buttonRequestId = targetButton.attr('data-requestid');
+        acceptRequest(buttonRequestId);
+    })
+
+    $("#tableRequestsAllUsers").find('.button-cancel').on('click', (event) => {
+        let targetButton = $(event.target);
+        let buttonRequestId = targetButton.attr('data-requestid');
+        cancelRequest(buttonRequestId);
+    })
+}
 async function getUsers() {
     let temp = '';
     const table = document.querySelector('#tableAllUsers tbody');
@@ -65,6 +116,7 @@ async function getUsers() {
                     <td>${user.firstName}</td>
                     <td>${user.lastName}</td>
                     <td>${user.age}</td>
+                    <td>${user.email}</td>
                     <td>${user.roles.map(e => " " + e.role.substr(5))}</td>
                     <td>
                         <button type="button" data-userid="${user.userId}" data-action="edit" class="button-edit btn btn-info"

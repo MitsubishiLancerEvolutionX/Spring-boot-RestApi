@@ -40,7 +40,12 @@
                 <div class="form-group">
                     <label for="age" class="com-form-label">Age</label>
                     <input type="number" class="form-control" id="age" value="${user.age}">
-                </div>          
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="com-form-label">Email</label>
+                    <input type="email" class="form-control" id="email" value="${user.email}">
+                </div>            
                 
                 <div class="form-group">
                     <label for="roles" class="com-form-label">Role</label>
@@ -71,6 +76,7 @@
         let firstName = modal.find("#firstName").val().trim();
         let lastName = modal.find("#lastName").val().trim();
         let age = modal.find("#age").val().trim();
+        let email = modal.find("#email").val().trim();
         let data = {
             userId: userId,
             login: login,
@@ -78,6 +84,7 @@
             firstName: firstName,
             lastName: lastName,
             age: age,
+            email: email,
             roles: checkedRoles()
 
         }
