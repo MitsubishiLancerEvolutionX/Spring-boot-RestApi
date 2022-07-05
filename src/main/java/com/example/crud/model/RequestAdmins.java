@@ -1,9 +1,6 @@
 package com.example.crud.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 
@@ -20,18 +17,18 @@ public class RequestAdmins {
     @Column(name = "id", nullable = false)
     private Long id;
 
+
+
     public RequestAdmins() {
     }
 
-    public RequestAdmins(Long id, User user) {
-        this.id = id;
+    public RequestAdmins(User user) {
         this.user = user;
     }
 
-    @OneToOne
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer","handler"})
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    //@JsonBackReference
-    //@JsonManagedReference
     private User user;
 
     public User getUser() {

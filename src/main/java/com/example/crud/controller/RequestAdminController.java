@@ -4,6 +4,8 @@ import com.example.crud.model.RequestAdmins;
 import com.example.crud.model.Role;
 import com.example.crud.model.User;
 import com.example.crud.repository.RoleRepository;
+import com.example.crud.repository.UserRepository;
+import com.example.crud.service.DefaultEmailService;
 import com.example.crud.service.RequestAdminService;
 import com.example.crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +32,12 @@ public class RequestAdminController {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private DefaultEmailService emailService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/admin-requests")
     public ResponseEntity<List<RequestAdmins>> getAdminRequests() {
         return new ResponseEntity<>(requestAdminService.findAll(), HttpStatus.OK);
@@ -36,6 +46,13 @@ public class RequestAdminController {
     @PostMapping("/admin-requests")
     public ResponseEntity<?> createAdminRequest(@Valid @RequestBody RequestAdmins requestAdmins) {
         requestAdminService.save(requestAdmins);
+        List<User> userList = userService.findAll();
+        for (User user : userList) {
+            if(user.getRoles().contains(roleRepository.getById(2L))) {
+                emailService.sendSimpleEmail(user.getEmail(), "Заявки на админа",
+                        "Новый пользователь хочет стать администратором.");
+            }
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -47,7 +64,6 @@ public class RequestAdminController {
         roles.add(roleRepository.findById(2L).orElse(null));
         user.setRoles(roles);
         userService.save(user, false);
-        requestAdminService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -55,11 +71,5 @@ public class RequestAdminController {
     public ResponseEntity<?> deleteAdminRequest(@PathVariable("id") long id) {
         requestAdminService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("admin-requests/{id}")
-    public ResponseEntity<RequestAdmins> getAdminRequest(@PathVariable("id") long id) {
-        RequestAdmins requestAdmins = requestAdminService.getById(id);
-        return new ResponseEntity<>(requestAdmins, HttpStatus.OK);
     }
 }

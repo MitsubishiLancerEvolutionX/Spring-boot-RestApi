@@ -31,7 +31,7 @@ const userFetch = {
     createAdminRequest: async (userId) => await fetch('api/admin-requests', {method: 'POST', headers: userFetch.head, body: JSON.stringify({"user": {"userId": userId}})}),
     findAllAdminRequests: async () => await fetch('api/admin-requests'),
     acceptRequest: async (id) => await fetch(`api/admin-requests/${id}/appoint`, {method: 'POST', headers: userFetch.head}),
-    cancelRequest: async (id) => await fetch(`api/admin-requests/${id}`, {method: 'DELETE', headers: userFetch.head})
+    cancelRequest: async (id) => await fetch(`api/admin-requests/${id}`, {method: 'DELETE', headers: userFetch.head}),
 }
 
 async function infoUser() {

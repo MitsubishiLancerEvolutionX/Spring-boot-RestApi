@@ -4,29 +4,6 @@ async function getUser() {
     await userFetch.findUserByUsername()
         .then(res => res.json())
         .then(user => {
-            temp = `
-                <tr>
-                    <td>${user.userId}</td>
-                    <td>${user.login}</td>
-                    <td>${user.firstName}</td>
-                    <td>${user.lastName}</td>
-                    <td>${user.age}</td>
-                    <td>${user.email}</td>
-                    <td>${user.roles.map(e => " " + e.role.substr(5))}</td>
-                   
-                  
-                            <button type="button" class="button-cancel btn btn-danger"
-                                    id="wantAdmin">I want to be an admin</button>
-                       
-                </tr>
-            `;
-            table.innerHTML = temp;
-
-            $("#wantAdmin").on('click', (event) => {
-                let targetButton = $(event.target);
-                let buttonRequestId = $("#userId").text();
-                userFetch.createAdminRequest(Number(buttonRequestId));
-            })
 
             $(function (){
                 let role = ""
@@ -39,7 +16,44 @@ async function getUser() {
             if (isUser) {
             $("#userTable").addClass("show active");
             $("#userTab").addClass("show active");
+                temp = `
+                <tr>
+                    <td>${user.userId}</td>
+                    <td>${user.login}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
+                    <td>${user.roles.map(e => " " + e.role.substr(5))}</td>
+                    
+                    <button type="button" ${user.requestAdmins?'disabled':''} class="button-cancel btn btn-danger" id="wantAdmin">I want to be an admin</button>
+                       
+                </tr>
+            `;
+                table.innerHTML = temp;
+
+                $("#wantAdmin").on('click', (event) => {
+                    let targetButton = $(event.target);
+                    let buttonRequestId = $("#userId").text();
+                    userFetch.createAdminRequest(Number(buttonRequestId));
+                    setTimeout(function(){
+                        getUser();
+                    }, 100);
+                })
+
             } else {
+                temp = `
+                <tr>
+                    <td>${user.userId}</td>
+                    <td>${user.login}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
+                    <td>${user.roles.map(e => " " + e.role.substr(5))}</td>       
+                </tr>
+            `;
+                table.innerHTML = temp;
             $("#adminTable").addClass("show active");
             $("#adminTab").addClass("show active");
             }
@@ -87,7 +101,6 @@ async function getAdminRequests() {
                `;
             })
             table.innerHTML = temp;
-
         })
 
     $("#tableRequestsAllUsers").find('.button-accept').on('click', (event) => {

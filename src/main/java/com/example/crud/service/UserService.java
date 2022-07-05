@@ -75,8 +75,8 @@ public class UserService {
         roles1.add(roleRepository.findById(1L).orElse(null));
         roles2.add(roleRepository.findById(1L).orElse(null));
         roles2.add(roleRepository.findById(2L).orElse(null));
-        User user1 = new User("Артур","Евлантьев", (byte) 24, "artur@mail.ru", "user", "user", roles1);
-        User user2 = new User("Максим","Константинов",(byte) 24, "max@mail.ru", "admin", "admin", roles2);
+        User user1 = new User("Артур","Евлантьев", (byte) 24, "evlantjev.artur2012@yandex.ru", "user", "user", roles1);
+        User user2 = new User("Максим","Константинов",(byte) 24, "evlantevartur@gmail.com", "admin", "admin", roles2);
         save(user1);
         save(user2);
     }

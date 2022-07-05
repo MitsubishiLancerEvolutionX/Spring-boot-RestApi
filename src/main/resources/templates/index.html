@@ -87,6 +87,7 @@
                             </table>
                         </div>
                     </div>
+
                     <div class="tab-pane fade" id="userTable">
                         <nav class="navbar navbar-expand-lg navbar-light bg-light">
                             <div class="navbar-brand">About user</div>
@@ -109,6 +110,7 @@
                             </table>
                         </div>
                     </div>
+
                     <div sec:authorize="hasAnyRole('ROLE_ADMIN')" class="tab-pane fade" id="adminRequestsTable">
                         <nav class="navbar navbar-expand-lg navbar-light bg-light">
                             <div class="navbar-brand">Admin requests</div>
